@@ -1,0 +1,16 @@
+{
+  "name": "figma-widget-component-checklist",
+  "version": "0.1.0",
+  "description": "This is Figma widget that contains a basic, best-practice checklist for design system component development",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "author": "Matthew Rea",
+  "license": "MIT",
+  "devDependencies": {
+    "@figma/plugin-typings": "*",
+    "@figma/widget-typings": "*",
+    "typescript": "*"
+  }
+}
