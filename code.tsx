@@ -1,13 +1,12 @@
 /* 
 This is Figma widget that contains a basic, best-practice checklist for design system component development
 
-When placed on the Figma canvas near a component, the idea is that the checklist items help ensure the 
-component is properly structured and robust enough for use in a design system setting.
+When placed on the Figma canvas near a component, the idea is that the checklist items help ensure the component is properly structured and robust enough for use in a design system setting.
 
 */
 
 const { widget } = figma
-const { useSyncedState, usePropertyMenu, AutoLayout, Text, Ellipse, Rectangle, SVG } = widget
+const { useSyncedState, useEffect, AutoLayout, Text, Ellipse, Rectangle, SVG } = widget
 
 // src for SVG element for the various statuses
 const successIcon = `
@@ -18,7 +17,7 @@ const successIcon = `
 
 const undeterminedIcon = `
 <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
-<path d='M32 16C32 24.8375 24.8375 32 16 32C7.1625 32 0 24.8375 0 16C0 7.1625 7.1625 0 16 0C24.8375 0 32 7.1625 32 16Z' fill='#B1B1B1'/>
+<path d='M31.5 16C31.5 24.5614 24.5614 31.5 16 31.5C7.43864 31.5 0.5 24.5614 0.5 16C0.5 7.43864 7.43864 0.5 16 0.5C24.5614 0.5 31.5 7.43864 31.5 16Z' fill='white' stroke='#B1B1B1'/>
 </svg>
 `
 
@@ -61,8 +60,8 @@ const statusIcons = [
   const initialRubricItems = [
     {
       position: 0,
-      title: "All layers and frames have meaningful names",
-      criteria: "Criteria for a passing item can be listed here",
+      title: "Name",
+      criteria: "Is the name of the component consistent with the codebase and documentation?",
       status: {
         label: "Undetermined",
         icon: undeterminedIcon
@@ -70,8 +69,8 @@ const statusIcons = [
     },
     {
       position: 1,
-      title: "Item title 2",
-      criteria: "Criteria for a passing item can be listed here",
+      title: "Layers",
+      criteria: "Are layer names formatted with meaningful values? (No Frame 234)",
       status: {
         label: "Undetermined",
         icon: undeterminedIcon
@@ -79,8 +78,8 @@ const statusIcons = [
     },
     {
       position: 2,
-      title: "Item title 3",
-      criteria: "Criteria for a passing item can be listed here",
+      title: "Color styles",
+      criteria: "Are all the colors from a style library / token and not hard-coded?",
       status: {
         label: "Undetermined",
         icon: undeterminedIcon
@@ -88,8 +87,8 @@ const statusIcons = [
     },
     {
       position: 3,
-      title: "Item title 4",
-      criteria: "Criteria for a passing item can be listed here",
+      title: "Text styles",
+      criteria: "Is each text layer from a defined text style library / token?",
       status: {
         label: "Undetermined",
         icon: undeterminedIcon
@@ -97,8 +96,53 @@ const statusIcons = [
     },
     {
       position: 4,
-      title: "Item title 5",
-      criteria: "Criteria for a passing item can be listed here",
+      title: "Spacing, padding and alignment",
+      criteria: "Are spacing, padding, and alignment values consistently applied and visually aligned?",
+      status: {
+        label: "Undetermined",
+        icon: undeterminedIcon
+      }
+    },
+    {
+      position: 5,
+      title: "Variants and component properties",
+      criteria: "Are variant and component properties correctly named? \nConsistent with code and among other components?",
+      status: {
+        label: "Undetermined",
+        icon: undeterminedIcon
+      }
+    },
+    {
+      position: 6,
+      title: "States",
+      criteria: "Are all the interactive states accounted for? (e.g., hover, focus, pressed)",
+      status: {
+        label: "Undetermined",
+        icon: undeterminedIcon
+      }
+    },
+    {
+      position: 7,
+      title: "Content",
+      criteria: "Does the component behave as expected with non-optimal concent is present? (e.g., long strings)",
+      status: {
+        label: "Undetermined",
+        icon: undeterminedIcon
+      }
+    },
+    {
+      position: 8,
+      title: "Layout",
+      criteria: "Does the component behave as expected when resized? (e.g., wrapping, alignment, text layer flow)",
+      status: {
+        label: "Undetermined",
+        icon: undeterminedIcon
+      }
+    },
+    {
+      position: 9,
+      title: "Configuration",
+      criteria: "Can all the required variations and states be acheived through the component properties panel? \n(e.g., no digging through Layers)",
       status: {
         label: "Undetermined",
         icon: undeterminedIcon
@@ -107,7 +151,13 @@ const statusIcons = [
   ]  
 
   const [rubricItems, setRubricItems] = useSyncedState ('rubricItems', () => initialRubricItems)
+  const [lastUpdate, setLastUpdate] = useSyncedState('lastUpdate', 0)
   
+  function showMessage(updatedItem) {
+    //figma.notify(`Status updated to ${rubricItems[updatedItem].status.label}`)
+    console.log("show message")
+  }
+
   function getNextStatus (currentStatus) {
     // based on the current status, find the next status and return it
     const currentIndex = statusIcons.findIndex(item => item.label === currentStatus)
@@ -121,14 +171,16 @@ const statusIcons = [
   }
 
 
-  function cycleStatus(item) {
+  function cycleStatus (item) {
     // click event copies current updates the selected item status to the next status
     setRubricItems(rubricItems => {
       const temp = [...rubricItems]
       temp[item.position].status = getNextStatus(item.status.label)
+      setLastUpdate(item.position)
       return temp
     })
   }
+
 
   return (
     <AutoLayout 
@@ -141,6 +193,7 @@ const statusIcons = [
         bottom: 12, 
         left: 32 
       }}>
+        <Text fill="#999" fontSize={12}>{`${rubricItems[lastUpdate].title} set to "${rubricItems[lastUpdate].status.label}"`}</Text>
   
       {
         rubricItems.map((item, index) => {
@@ -150,9 +203,9 @@ const statusIcons = [
               name="Rubric"
               overflow="visible"
               spacing={32}
-              width={700}
-              verticalAlignItems="center"
-              onClick={() => cycleStatus(item)}
+              width={900}
+              verticalAlignItems="start"
+              
             >
               <AutoLayout
                 name="Status"
@@ -167,8 +220,7 @@ const statusIcons = [
                 horizontalAlignItems="end"
                 verticalAlignItems="center"
               >
-                
-                <SVG src={item.status.icon} />
+                <SVG src={item.status.icon} onClick={() => cycleStatus(item)} />
               </AutoLayout>
               <AutoLayout
                 name="Rubric Text"
@@ -190,6 +242,7 @@ const statusIcons = [
                   name="Description"
                   fill="#555"
                   fontFamily="Inter"
+                  
                 >
                   {item.criteria}
                 </Text>
