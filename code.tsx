@@ -106,7 +106,7 @@ const statusIcons = [
     {
       position: 5,
       title: "Variants and component properties",
-      criteria: "Are variant and component properties correctly named? \nConsistent with code and among other components?",
+      criteria: "Are variant and component properties correctly named? Consistent with code and among other components?",
       status: {
         label: "Undetermined",
         icon: undeterminedIcon
@@ -151,7 +151,7 @@ const statusIcons = [
   ]  
 
   const [rubricItems, setRubricItems] = useSyncedState ('rubricItems', () => initialRubricItems)
-  const [lastUpdate, setLastUpdate] = useSyncedState('lastUpdate', 0)
+  const [lastUpdate, setLastUpdate] = useSyncedState('lastUpdate', null)
   
   function showMessage(updatedItem) {
     //figma.notify(`Status updated to ${rubricItems[updatedItem].status.label}`)
@@ -193,8 +193,12 @@ const statusIcons = [
         bottom: 12, 
         left: 32 
       }}>
-        <Text fill="#999" fontSize={12}>{`${rubricItems[lastUpdate].title} set to "${rubricItems[lastUpdate].status.label}"`}</Text>
-  
+        
+        {(lastUpdate !== null) ? 
+          <Text fill="#999" fontSize={14}>{`${rubricItems[lastUpdate].title} set to "${rubricItems[lastUpdate].status.label}"`}</Text>
+          :
+          <Text fill="#999" fontSize={14}>Toggle checklist status to success, failure, or not applicable</Text>
+        }
       {
         rubricItems.map((item, index) => {
           return (
@@ -202,21 +206,20 @@ const statusIcons = [
               key={index}
               name="Rubric"
               overflow="visible"
-              spacing={32}
+              spacing={24}
               width={900}
               verticalAlignItems="start"
+              padding={{
+                top: 0,
+                right: 0,
+                bottom: 12,
+                left: 0,
+              }}
               
             >
               <AutoLayout
                 name="Status"
                 overflow="visible"
-                spacing={8}
-                padding={{
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 16,
-                }}
                 horizontalAlignItems="end"
                 verticalAlignItems="center"
               >
@@ -233,7 +236,7 @@ const statusIcons = [
                   name="Title"
                   fill="#000"
                   fontFamily="Inter"
-                  fontSize={18}
+                  fontSize={20}
                   fontWeight={500}
                 >
                   {item.title}
