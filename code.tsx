@@ -6,7 +6,7 @@ When placed on the Figma canvas near a component, the idea is that the checklist
 */
 
 const { widget } = figma
-const { useSyncedState, useEffect, AutoLayout, Text, Ellipse, Rectangle, SVG } = widget
+const { useSyncedState, AutoLayout, Text, SVG } = widget
 
 // src for SVG element for the various statuses
 const successIcon = `
@@ -152,11 +152,6 @@ const statusIcons = [
 
   const [rubricItems, setRubricItems] = useSyncedState ('rubricItems', () => initialRubricItems)
   const [lastUpdate, setLastUpdate] = useSyncedState('lastUpdate', null)
-  
-  function showMessage(updatedItem) {
-    //figma.notify(`Status updated to ${rubricItems[updatedItem].status.label}`)
-    console.log("show message")
-  }
 
   function getNextStatus (currentStatus) {
     // based on the current status, find the next status and return it

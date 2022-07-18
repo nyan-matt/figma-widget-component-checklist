@@ -1,3 +1,13 @@
+### About
+This is Figma widget that contains a basic, best-practice checklist for design system component development. Loosely based on Nathan Curtis’ Figma Component Review article: https://medium.com/eightshapes-llc/the-figma-component-review-f42114450b4d 
+
+When placed on the Figma canvas near a component, the idea is that the checklist items help ensure the component is properly structured and robust enough for use in a design system setting.
+
+![GIF](component-checklist.gif)
+
+
+
+### Setup
 Below are the steps to get your widget running. You can also find instructions at:
 
 https://www.figma.com/widget-docs/setup-guide/
