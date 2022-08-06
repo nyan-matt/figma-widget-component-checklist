@@ -147,6 +147,15 @@ const statusIcons = [
         label: "Undetermined",
         icon: undeterminedIcon
       }
+    },
+    {
+      position: 10,
+      title: "Accessibility",
+      criteria: "Are color combinations accessible WCAG AAA compliant? Do focusable elements have a defined focus order?",
+      status: {
+        label: "Undetermined",
+        icon: undeterminedIcon
+      }
     }
   ]  
 
